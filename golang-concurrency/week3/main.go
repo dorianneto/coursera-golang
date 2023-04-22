@@ -38,6 +38,8 @@ func main() {
 		rawData = append(rawData, number)
 	}
 
+	log.Printf("Raw data: %v\n", rawData)
+
 	perPartition := int(math.Ceil(float64(len(rawData)) / PARTITION_SIZE))
 
 	index := 0
@@ -51,7 +53,9 @@ func main() {
 		partition := rawData[index:value]
 
 		go func(o *[]int, p []int, c chan []int) {
-			*o = append(*o, partition...)
+			*o = append(*o, p...)
+
+			log.Printf("Unsorted partition: %v\n", p)
 
 			c <- *o
 		}(&output, partition, c)
@@ -64,5 +68,5 @@ func main() {
 
 	sort.Ints(output)
 
-	fmt.Println(output)
+	fmt.Printf("Output: %v", output)
 }
